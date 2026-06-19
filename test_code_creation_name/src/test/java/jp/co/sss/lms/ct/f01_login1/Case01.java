@@ -45,14 +45,14 @@ public class Case01 {
 		/** エビデンスキャプチャ取得 */
 		getEvidence(new Object() {
 		});
-		/** ログイン画面の判定 */
+		/** ログイン画面の判定1 */
 		String pageTitle = "ログイン";
 		String headingText = webDriver.findElement(By.tagName("h2")).getText();
 		assertEquals(pageTitle, headingText, "ログイン画面ではありません、またはログイン画面が正しく表示されていません");
 		
-		boolean isbuttonCheck = webDriver.findElement(By.className("btn-primary")).isDisplayed();
-		assertTrue(isbuttonCheck, "ログイン画面ではありません、またはログイン画面が正しく表示されていません");
-
+		/** ログイン画面の判定2 */
+		String actualButtonText = webDriver.findElement(By.className("btn-primary")).getAttribute("value");
+		assertEquals("ログイン", actualButtonText, "ログイン画面ではありません、またはログイン画面が正しく表示されていません");
 	}
 
 }
