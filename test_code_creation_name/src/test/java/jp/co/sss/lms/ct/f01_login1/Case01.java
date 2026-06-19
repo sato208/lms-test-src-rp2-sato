@@ -10,6 +10,7 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.openqa.selenium.By;
 
 /**
  * 結合テスト ログイン機能①
@@ -44,8 +45,13 @@ public class Case01 {
 		/** エビデンスキャプチャ取得 */
 		getEvidence(new Object() {
 		});
-		/** URL判定 */
-		assertEquals(targetUrl, webDriver.getCurrentUrl(), "URLが一致しません");
+		/** ログイン画面の判定 */
+		String pageTitle = "ログイン";
+		String headingText = webDriver.findElement(By.tagName("h2")).getText();
+		assertEquals(pageTitle, headingText, "ログイン画面ではありません、またはログイン画面が正しく表示されていません");
+		
+		boolean isbuttonCheck = webDriver.findElement(By.className("btn-primary")).isDisplayed();
+		assertTrue(isbuttonCheck, "ログイン画面ではありません、またはログイン画面が正しく表示されていません");
 
 	}
 

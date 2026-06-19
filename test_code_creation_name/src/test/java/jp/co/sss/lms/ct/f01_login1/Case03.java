@@ -1,6 +1,7 @@
 package jp.co.sss.lms.ct.f01_login1;
 
 import static jp.co.sss.lms.ct.util.WebDriverUtils.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.openqa.selenium.By;
 
 /**
  * 結合テスト ログイン機能①
@@ -35,14 +37,38 @@ public class Case03 {
 	@Order(1)
 	@DisplayName("テスト01 トップページURLでアクセス")
 	void test01() {
-		// TODO ここに追加
+		
+		/** URL取得 */
+		String targetUrl = "http://localhost:8080/lms/";
+		/** URL開く */
+		goTo(targetUrl);
+		/** エビデンスキャプチャ取得 */
+		getEvidence(new Object() {
+		});
+		/** ログイン画面の判定 */
+		String pageTitle = "ログイン";
+		String headingText = webDriver.findElement(By.tagName("h2")).getText();
+		assertEquals(pageTitle, headingText, "ログイン画面ではありません、またはログイン画面が正しく表示されていません");
+		
+		boolean isbuttonCheck = webDriver.findElement(By.className("btn-primary")).isDisplayed();
+		assertTrue(isbuttonCheck, "ログイン画面ではありません、またはログイン画面が正しく表示されていません");
+		
 	}
 
 	@Test
 	@Order(2)
 	@DisplayName("テスト02 初回ログイン済みの受講生ユーザーでログイン")
 	void test02() {
-		// TODO ここに追加
+		/**loginId,password欄にStudentAA01を入力 */
+		webDriver.findElement(By.id("loginId")).sendKeys("StudentAA01");
+		
+		webDriver.findElement(By.id("password")).sendKeys("StudentAA01");
+		
+		/** エビデンスキャプチャ取得 */
+		getEvidence(new Object() {
+		}, "input");
+		/** ログインボタンを押下 */
+		webDriver.findElement(By.className("btn-primary")).click();
 	}
 
 }
