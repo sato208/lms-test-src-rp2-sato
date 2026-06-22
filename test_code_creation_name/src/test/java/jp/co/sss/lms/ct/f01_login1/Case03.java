@@ -46,13 +46,13 @@ public class Case03 {
 		getEvidence(new Object() {
 		});
 		/** ログイン画面の判定1 */
-		String pageTitle = "ログイン";
+		String actualText = "ログイン";
 		String headingText = webDriver.findElement(By.tagName("h2")).getText();
-		assertEquals(pageTitle, headingText, "ログイン画面ではありません、またはログイン画面が正しく表示されていません");
+		assertEquals(actualText, headingText, "ログイン画面ではありません、またはログイン画面が正しく表示されていません");
 
 		/** ログイン画面の判定2 */
 		String actualButtonText = webDriver.findElement(By.className("btn-primary")).getAttribute("value");
-		assertEquals("ログイン", actualButtonText, "ログイン画面ではありません、またはログイン画面が正しく表示されていません");
+		assertEquals(actualText, actualButtonText, "ログイン画面ではありません、またはログイン画面が正しく表示されていません");
 
 	}
 
@@ -60,6 +60,7 @@ public class Case03 {
 	@Order(2)
 	@DisplayName("テスト02 初回ログイン済みの受講生ユーザーでログイン")
 	void test02() {
+
 		/**loginId,password欄にStudentAA01を入力 */
 		webDriver.findElement(By.id("loginId")).sendKeys("StudentAA01");
 
@@ -70,6 +71,20 @@ public class Case03 {
 		}, "input");
 		/** ログインボタンを押下 */
 		webDriver.findElement(By.className("btn-primary")).click();
+
+		/** コース詳細画面判定1*/
+		String expectedUrl = "http://localhost:8080/lms/course/detail";
+		assertEquals(expectedUrl, webDriver.getCurrentUrl(), "画面URLが一致しません");
+
+		/** コース詳細画面判定2*/
+		String actualBreadcrumb = webDriver.findElement(By.className("breadcrumb")).findElement(By.tagName("li"))
+				.getText();
+		assertEquals("コース詳細", actualBreadcrumb, "コース詳細画面ではありません、またはコース詳細画面が正しく表示されていません");
+
+		/** エビデンスキャプチャ取得 */
+		getEvidence(new Object() {
+		}, "result");
+
 	}
 
 }
