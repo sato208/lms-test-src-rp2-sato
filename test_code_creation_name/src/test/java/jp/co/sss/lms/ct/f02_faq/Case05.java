@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 /**
  * 結合テスト よくある質問機能
@@ -152,31 +153,55 @@ public class Case05 {
 	@DisplayName("テスト05 キーワード検索で該当キーワードを含む検索結果だけ表示")
 	void test05() {
 		
+		/**タブ切り替え（エラー対策） */
+		for (String windowHandle : webDriver.getWindowHandles()) {
+			webDriver.switchTo().window(windowHandle);
+			if (webDriver.getCurrentUrl().contains("/lms/faq")) {
+				break; 
+			}
+		}
+
 		/**キーワード欄にキャンセルを入力 */
 		webDriver.findElement(By.id("form")).sendKeys("キャンセル");
-		
+
 		/**検索押下 */
 		webDriver.findElement(By.cssSelector("input[value='検索']")).click();
 		
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		/**検索結果の判定1（件数）*/
+		int actualCount = webDriver.findElements(By.cssSelector(".table tbody tr")).size();
+		assertEquals(1, actualCount, "検索結果のヒット件数が一致しません");
+		
+		
+		/**検索結果の判定2(中身）*/
+		WebElement firstQuestionDl = webDriver.findElement(By.cssSelector(".table tbody tr:nth-child(1) dl"));
+		String firstQuestionText = firstQuestionDl.getText();
+		assertTrue(firstQuestionText.contains("キャンセル"), "キーワード『キャンセル』が含まれていません");
+		
 		/**下までスクロール（確実に撮るため待機時間の確保）*/
 		try {
-	        Thread.sleep(3000); 
-	    } catch (InterruptedException e) {
-	        e.printStackTrace();
-	    }
-		
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		scrollTo("document.body.scrollHeight");
-		
+
 		try {
-	        Thread.sleep(3000); 
-	    } catch (InterruptedException e) {
-	        e.printStackTrace();
-	    }
-		
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		/** エビデンスキャプチャ（結果）取得 */
 		getEvidence(new Object() {
 		});
-		
+
 	}
 
 	@Test
@@ -184,13 +209,21 @@ public class Case05 {
 	@DisplayName("テスト06 「クリア」ボタン押下で入力したキーワードを消去")
 	void test06() {
 		
+		/**タブ切り替え（エラー対策） */
+		for (String windowHandle : webDriver.getWindowHandles()) {
+			webDriver.switchTo().window(windowHandle);
+			if (webDriver.getCurrentUrl().contains("/lms/faq")) {
+				break; // よくある質問のタブが見つかったらループを抜ける
+			}
+		}
+
 		/**クリア押下 */
 		webDriver.findElement(By.cssSelector("input[value='クリア']")).click();
-		
+
 		/** エビデンスキャプチャ（結果）取得 */
 		getEvidence(new Object() {
 		});
-		
+
 	}
 
 }

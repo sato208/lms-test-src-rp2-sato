@@ -153,8 +153,30 @@ public class Case06 {
 	@DisplayName("テスト05 カテゴリ検索で該当カテゴリの検索結果だけ表示")
 	void test05() {
 		
+		/**タブ切り替え（エラー対策） */
+		for (String windowHandle : webDriver.getWindowHandles()) {
+			webDriver.switchTo().window(windowHandle);
+			if (webDriver.getCurrentUrl().contains("/lms/faq")) {
+				break; 
+			}
+		}
+		
 		/**カテゴリ検索*/
 		webDriver.findElement(By.linkText("【研修関係】")).click();
+		
+		/**検索結果の判定1（件数）*/
+		int actualCount = webDriver.findElements(By.cssSelector(".table tbody tr")).size();
+		assertEquals(2, actualCount, "検索結果のヒット件数が一致しません");
+		
+		/**検索結果の判定2（中身1）*/
+		WebElement firstQuestion = webDriver.findElement(By.cssSelector(".table tbody tr:nth-child(1) dl"));
+		String firstQuestionText = firstQuestion.getText();
+		assertTrue(firstQuestionText.contains("キャンセル"), "キーワード『キャンセル』が含まれていません");
+		
+		/**検索結果の判定2（中身2）*/
+		WebElement secondQuestion = webDriver.findElement(By.cssSelector(".table tbody tr:nth-child(2) dl"));
+		String secondQuestionText = secondQuestion.getText();
+		assertTrue(secondQuestionText.contains("研修"), "2件目の検索結果に『研修』が含まれていません");
 		
 		/**下までスクロール（確実に撮るため待機時間の確保）*/
 		try {
@@ -182,12 +204,21 @@ public class Case06 {
 	@DisplayName("テスト06 検索結果の質問をクリックしその回答を表示")
 	void test06() {
 		
-		/** 検索結果の質問クリック*/
-		webDriver.findElement(By.cssSelector("[id^='question-h']")).click();
+		/**タブ切り替え（エラー対策） */
+		for (String windowHandle : webDriver.getWindowHandles()) {
+			webDriver.switchTo().window(windowHandle);
+			if (webDriver.getCurrentUrl().contains("/lms/faq")) {
+				break;
+			}
+		}
 		
-		/** 回答表示の確認*/
-		WebElement answerElement = webDriver.findElement(By.cssSelector("[id^='answer-h']"));
-		assertTrue(answerElement.isDisplayed(), "質問クリック後に回答が開かれていません");
+		/** 検索結果の質問クリック*/
+		WebElement firstQuestionDl = webDriver.findElement(By.cssSelector(".table tbody tr:nth-child(1) dl"));
+		firstQuestionDl.click();
+		
+		/** 回答表示の判定*/
+		WebElement firstAnswerDd = webDriver.findElement(By.cssSelector(".table tbody tr:nth-child(1) dd"));
+		assertTrue(firstAnswerDd.isDisplayed(), "回答が表示されていません");
 		
 		/** エビデンスキャプチャ（結果）取得 */
 		getEvidence(new Object() {
