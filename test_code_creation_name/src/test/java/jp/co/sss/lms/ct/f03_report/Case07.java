@@ -105,7 +105,7 @@ public class Case07 {
 
 		/** セクション詳細画面判定1*/
 		String expectedUrl = "http://localhost:8080/lms/section/detail";
-		assertEquals(expectedUrl, webDriver.getCurrentUrl(), "ログイン成功後の画面URLが一致しません");
+		assertEquals(expectedUrl, webDriver.getCurrentUrl(), "画面URLが一致しません");
 
 		/** セクション詳細画面判定2*/
 		String currentPageTitle = webDriver.findElement(By.cssSelector(".breadcrumb li.active")).getText();
@@ -131,7 +131,7 @@ public class Case07 {
 
 		/** レポート登録画面判定1*/
 		String expectedUrl = "http://localhost:8080/lms/report/regist";
-		assertEquals(expectedUrl, webDriver.getCurrentUrl(), "ログイン成功後の画面URLが一致しません");
+		assertEquals(expectedUrl, webDriver.getCurrentUrl(), "画面URLが一致しません");
 
 		/** レポート登録画面判定2*/
 		String currentPageTitle = webDriver.findElement(By.cssSelector("h2")).getText();

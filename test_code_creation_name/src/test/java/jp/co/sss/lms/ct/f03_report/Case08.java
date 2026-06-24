@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 /**
  * 結合テスト レポート機能
@@ -94,11 +95,11 @@ public class Case08 {
 	void test03() {
 
 		/** 提出済み詳細ボタンクリック*/
-		webDriver.findElement(By.xpath("//tr[contains(., '提出済み')]//input[@value='詳細']")).click();
+		webDriver.findElement(By.xpath("//tr[contains(., '2022年10月2日(日)')]//input[@value='詳細']")).click();
 
 		/** セクション詳細画面判定1*/
 		String expectedUrl = "http://localhost:8080/lms/section/detail";
-		assertEquals(expectedUrl, webDriver.getCurrentUrl(), "ログイン成功後の画面URLが一致しません");
+		assertEquals(expectedUrl, webDriver.getCurrentUrl(), "画面URLが一致しません");
 
 		/** セクション詳細画面判定2*/
 		String currentPageTitle = webDriver.findElement(By.cssSelector(".breadcrumb li.active")).getText();
@@ -119,16 +120,24 @@ public class Case08 {
 	@DisplayName("テスト04 「確認する」ボタンを押下しレポート登録画面に遷移")
 	void test04() {
 
+		scrollBy("300");
+
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		/** 「確認する」ボタンクリック*/
-		webDriver.findElement(By.cssSelector(".table tr input[type='submit']")).click();
+		webDriver.findElement(By.cssSelector("#sectionDetail table input[value*='週報']")).click();
 
 		/** レポート登録画面判定1*/
 		String expectedUrl = "http://localhost:8080/lms/report/regist";
-		assertEquals(expectedUrl, webDriver.getCurrentUrl(), "ログイン成功後の画面URLが一致しません");
+		assertEquals(expectedUrl, webDriver.getCurrentUrl(), "画面URLが一致しません");
 
 		/** レポート登録画面判定2*/
 		String currentPageTitle = webDriver.findElement(By.cssSelector("h2")).getText();
-		assertTrue("レポート登録画面ではありません、またはレポート登録画面が正しく表示されていません", currentPageTitle.contains("日報【デモ】"));
+		assertTrue("レポート登録画面ではありません、またはレポート登録画面が正しく表示されていません", currentPageTitle.contains("週報【デモ】"));
 
 		/** エビデンスキャプチャ取得 */
 		getEvidence(new Object() {
@@ -148,7 +157,19 @@ public class Case08 {
 		}
 
 		/** 報告内容入力*/
-		webDriver.findElement(By.id("content_0")).sendKeys("ありがとうございました。");
+		WebElement textfield = webDriver.findElement(By.id("content_1"));
+
+		textfield.clear();
+
+		textfield.sendKeys("難しかった");
+
+		scrollBy("300");
+
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 		/** 提出するクリック*/
 		webDriver.findElement(By.cssSelector("button.btn.btn-primary")).click();
@@ -219,7 +240,7 @@ public class Case08 {
 		}
 
 		/** 当該レポートの「詳細」をクリック*/
-		webDriver.findElement(By.xpath("//tr[contains(., '2022年10月1日(土)')]//input[@value='詳細']")).click();
+		webDriver.findElement(By.xpath("//tr[contains(., '週報【デモ】')]//input[@value='詳細']")).click();
 
 		try {
 			Thread.sleep(3000);
@@ -236,6 +257,11 @@ public class Case08 {
 		String buttonTitle = webDriver.findElement(By.xpath("//button[text()='フィードバックコメントを登録する']"))
 				.getText();
 		assertTrue("レポート詳細画面ではありません、またはレポート詳細画面が正しく表示されていません", buttonTitle.contains("フィードバックコメントを登録する"));
+
+		/** 修正内容判定*/
+		WebElement reportTable = webDriver.findElement(By.xpath("//h3[text()='報告レポート']/following-sibling::table[1]"));
+		String tableText = reportTable.getText();
+		assertTrue("修正内容が反映されていません", tableText.contains("難しかった"));
 
 		/** エビデンスキャプチャ取得 */
 		getEvidence(new Object() {
