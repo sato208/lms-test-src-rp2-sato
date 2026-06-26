@@ -1,7 +1,9 @@
 package jp.co.sss.lms.ct.f06_login2;
 
 import static jp.co.sss.lms.ct.util.WebDriverUtils.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -72,6 +74,16 @@ public class Case15 {
 
 		/** ログインボタンを押下 */
 		webDriver.findElement(By.className("btn-primary")).click();
+		
+		/** 利用規約画面判定1*/
+		String currentUrl = webDriver.getCurrentUrl();
+		assertTrue("押下後の画面URLが一致しません（現在のURL: " + currentUrl + "）",
+				currentUrl.contains("http://localhost:8080/lms/user/agreeSecurity"));
+
+		/** 利用規約画面判定2*/
+		String currentPageTitle = webDriver.findElement(By.cssSelector("h2")).getText();
+		assertTrue("利用規約画面ではありません、または利用規約画面が正しく表示されていません", currentPageTitle.contains("利用規約"));
+
 
 		/** エビデンスキャプチャ取得 */
 		getEvidence(new Object() {
